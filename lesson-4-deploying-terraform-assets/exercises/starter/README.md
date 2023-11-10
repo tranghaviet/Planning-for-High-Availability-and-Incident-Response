@@ -4,7 +4,7 @@
 2. Change your region to `us-east-2`. From the AWS console create an S3 bucket in `us-east-2` called `udacity-tf-<your_name>` e.g `udacity-tf-tscotto`
     - click next until created.
     - Update `_config.tf` in the `zone1` folder with your S3 bucket name where you will replace `<your_name>` with your name
-    - Add SSH key pair name "udacity", then `key_name` to ec2 instance
+    - Add SSH key pair name "udacity" to both regions, then add `key_name` to ec2 instance config
 
 3. Setup your CloudShell. Open CloudShell in the `us-east-2` region. Install the following:
 
