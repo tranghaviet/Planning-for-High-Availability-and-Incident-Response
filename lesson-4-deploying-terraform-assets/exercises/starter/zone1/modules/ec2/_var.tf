@@ -4,6 +4,7 @@ variable "account" {}
 variable "private_subnet_ids" {}
 variable "public_subnet_ids" {}
 variable "vpc_id" {}
+variable "key_name" {}
 
 variable "instance_count" {}
 

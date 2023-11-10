@@ -4,6 +4,7 @@
 2. Change your region to `us-east-2`. From the AWS console create an S3 bucket in `us-east-2` called `udacity-tf-<your_name>` e.g `udacity-tf-tscotto`
     - click next until created.
     - Update `_config.tf` in the `zone1` folder with your S3 bucket name where you will replace `<your_name>` with your name
+    - Add SSH key pair name "udacity", then `key_name` to ec2 instance
 
 3. Setup your CloudShell. Open CloudShell in the `us-east-2` region. Install the following:
 
@@ -19,5 +20,10 @@
     - `cd` into the `starter` folder
     - `terraform init`
     - `terraform apply`
+
+5. SSH to the EC2 instances then run to start a simple python HTTP server
+```sh
+sudo python3 -m http.server 80
+```
 
 5. At the end of your lesson, run `terraform destroy` and allow it to destroy all your resources
