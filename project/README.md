@@ -173,7 +173,7 @@ Login to Grafana with `admin` for the username and `prom-operator` for the passw
         - For the application load balancer, please note the technical requirements:
             - This will attach to the Ubuntu VMs on port 80.
             - It should listen on port 80
-        <!-- - You will need to set the following for the RDS instnaces
+        <!-- - You will need to set the following for the RDS instances
             - Create 2 instances nodes for each cluster
             - Set the backup retention window to 5 days -->
     2. Make the appropriate changes to your code

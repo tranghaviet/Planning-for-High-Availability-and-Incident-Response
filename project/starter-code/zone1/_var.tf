@@ -1,3 +1,5 @@
 variable "instance_count" {
-  default = "1"
+  # TODO edit to 3 before submit
+  # default = "3"
+  default = "2"
 }
