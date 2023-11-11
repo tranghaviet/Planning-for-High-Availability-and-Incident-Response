@@ -71,24 +71,38 @@ Clone the appropriate git repo with the starter code. There will be 2 folders. Z
 - kubectl
     - `curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl`
     - `chmod +x ./kubectl`
-    - `mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin`
+    - `mkdir -p $HOME/bin && mv ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin`
     - `echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc`
 
 7. Deploy Terraform infrastructure
     - Clone the starter code from the git repo to a folder CloudShell
     - `cd` into the `zone1` folder
-    - `terraform init`
-    - `terraform apply -auto-approve`
 
-**NOTE** The first time you run `terraform apply` you may see errors about the Kubernetes namespace or an RDS error. Running it again AFTER performing the step below should clear up those errors.
+```shell
+terraform init
+aws eks --region us-east-2 update-kubeconfig --name udacity-cluster
+kubectl config use-context arn:aws:eks:us-east-2:017496916452:cluster/udacity-cluster
+# Confirm with: 
+kubectl get pods --all-namespaces
+kubectl create namespace monitoring
+terraform apply -auto-approve
+```
 
-8. Setup Kubernetes config so you can ping the EKS cluster
-   - `aws eks --region us-east-2 update-kubeconfig --name udacity-cluster`
-   - Change kubernetes context to the new AWS cluster
-     - `kubectl config use-context arn:aws:eks:us-east-2:017496916452:cluster/udacity-cluster`
-       - e.g ` arn:aws:eks:us-east-2:139802095464:cluster/udacity-cluster`
-   - Confirm with: `kubectl get pods --all-namespaces`
-   - Then run `kubectl create namespace monitoring`
+[comment]: <> (**NOTE** The first time you run `terraform apply` you may see errors about the Kubernetes namespace or an RDS error. Running it again AFTER performing the step below should clear up those errors.)
+
+[comment]: <> (8. Setup Kubernetes config so you can ping the EKS cluster)
+
+[comment]: <> (   - `aws eks --region us-east-2 update-kubeconfig --name udacity-cluster`)
+
+[comment]: <> (   - Change kubernetes context to the new AWS cluster)
+
+[comment]: <> (     - `kubectl config use-context arn:aws:eks:us-east-2:017496916452:cluster/udacity-cluster`)
+
+[comment]: <> (       - e.g ` arn:aws:eks:us-east-2:139802095464:cluster/udacity-cluster`)
+
+[comment]: <> (   - Confirm with: `kubectl get pods --all-namespaces`)
+
+[comment]: <> (   - Then run `kubectl create namespace monitoring`)
    <!-- - Change context to `udacity` namespace
      - `kubectl config set-context --current --namespace=udacity` -->
 
@@ -199,13 +213,21 @@ Login to Grafana with `admin` for the username and `prom-operator` for the passw
             ```
     2. Make the appropriate changes to your code
     - `cd` into your `zone2` folder
-    - `terraform init`
-    - `terraform apply`
+    
+```shell
+terraform init
+aws eks --region us-west-1 update-kubeconfig --name udacity-cluster
+kubectl config use-context arn:aws:eks:us-west-1:017496916452:cluster/udacity-cluster
+# Confirm with: 
+kubectl get pods --all-namespaces
+kubectl create namespace monitoring
+terraform apply -auto-approve
+```
     3. Please take a screenshot of a successful Terraform run and include that as part of your submission for the project.
 
 6. Implement basic SQL replication and establish backups
     **NOTE:** The RDS configuration is completed under the `zone1` folder. Due to the way it was implemented in Terraform BOTH region RDS instances are completed under the same Terraform project.
-    1. You will need to make sure the cluster is highly available. Please see the `requirements.md` document [here](requirements.md) for details on the requirements for making the cluster HA. You will modify your code to meet those requirements. Additionally, you will need to set the following for the RDS instnaces:
+    1. You will need to make sure the cluster is highly available. Please see the `requirements.md` document [here](requirements.md) for details on the requirements for making the cluster HA. You will modify your code to meet those requirements. Additionally, you will need to set the following for the RDS instances:
         <!-- - Create 2 instance nodes for each cluster (primary and secondary clusters)
         - Set the backup retention window to 5 days -->
         - Setup the source name and region for your RDS instance in your secondary zone
