@@ -1,16 +1,16 @@
 - job_name: 'ec2'
   metrics_path: /metrics
   static_configs:
-    - targets: 
-      - <public_ip>:9100
-      - <public_ip>:80
+    - targets:
+      - 3.139.237.79:9100
+      - 3.139.237.79:80
 - job_name: blackbox
   metrics_path: /probe
   params:
     module: [http_2xx]
   static_configs:
     - targets:
-      - http://<public_ip>
+      - http://3.139.237.79
   relabel_configs:
   - source_labels: [__address__]
     target_label: __param_target

@@ -29,25 +29,27 @@ Clone the appropriate git repo with the starter code. There will be 2 folders. Z
    **Restore image**
 
     ```shell
-    aws ec2 create-restore-image-task --object-key ami-0ec6fdfb365e5fc00.bin --bucket udacity-srend --name "udacity-<your_name>"
+    aws ec2 create-restore-image-task --object-key ami-0ec6fdfb365e5fc00.bin --bucket udacity-srend --name "udacity-tranghv"
     ```
     <!-- - Replace the owner field in `_data.tf` with your Amazon owner ID assigned on the AMI (you can get this in the console by going to EC2 - AMIs and selecting the Owned by me at the top filter) -->
     - Take note of that AMI ID the script just output. Copy the AMI to `us-east-2` and `us-west-1`:
-        - `aws ec2 copy-image --source-image-id <your-ami-id-from-above> --source-region us-east-1 --region us-east-2 --name "udacity-<your_name>"`
-        - `aws ec2 copy-image --source-image-id <your-ami-id-from-above> --source-region us-east-1 --region us-west-1 --name "udacity-<your_name>"`
+        - `aws ec2 copy-image --source-image-id ami-0e0fccc5191870815 --source-region us-east-1 --region us-east-2 --name "udacity-tranghv"`
+          => output: `ami-0142591dfbdae81fd`
+        - `aws ec2 copy-image --source-image-id ami-0e0fccc5191870815 --source-region us-east-1 --region us-west-1 --name "udacity-tranghv"`
+    => output: `ami-0669550e114b10eb4`
 
     - Make note of the ami output from the above 2 commands. You'll need to put this in the `ec2.tf` file for `zone1` for `us-east-2` and in `ec2.tf` file for `zone2` for `us-west-1` respectively
 
     <!-- - Set your aws cli config to `us-east-2` -->
 
-3. Close your CloudShell. Change your region to `us-east-2`. From the AWS console create an S3 bucket in `us-east-2` called `udacity-tf-<your_name>` e.g `udacity-tf-tscotto`
+3. Close your CloudShell. Change your region to `us-east-2`. From the AWS console create an S3 bucket in `us-east-2` called `udacity-tf-tranghv`
     - click next until created.
-    - Update `_config.tf` in the `zone1` folder with your S3 bucket name where you will replace `<your_name>` with your name
+    - Update `_config.tf` in the `zone1` folder with your S3 bucket name where you will replace `tranghv` with your name
     - **NOTE**: S3 bucket names MUST be globally unique!
 
-4. Change your region to `us-west-1`. From the AWS console create an S3 bucket in `us-west-1` called `udacity-tf-<your_name>-west` e.g `udacity-tf-tscotto`
+4. Change your region to `us-west-1`. From the AWS console create an S3 bucket in `us-west-1` called `udacity-tf-tranghv-west` e.g `udacity-tf-tscotto`
     - click next until created.
-    - Update `_config.tf` in the `zone2` folder with your S3 bucket name where you will replace `<your_name>` with your name
+    - Update `_config.tf` in the `zone2` folder with your S3 bucket name where you will replace `tranghv` with your name
     - **NOTE**: S3 bucket names MUST be globally unique!
 
 5. Create a private key pair for your EC2 instances
@@ -76,14 +78,14 @@ Clone the appropriate git repo with the starter code. There will be 2 folders. Z
     - Clone the starter code from the git repo to a folder CloudShell
     - `cd` into the `zone1` folder
     - `terraform init`
-    - `terraform apply`
+    - `terraform apply -auto-approve`
 
-**NOTE** The first time you run `terraform apply` you may see errors about the Kubernetes namespace or an RDS error. Running it again AND performing the step below should clear up those errors.
+**NOTE** The first time you run `terraform apply` you may see errors about the Kubernetes namespace or an RDS error. Running it again AFTER performing the step below should clear up those errors.
 
 8. Setup Kubernetes config so you can ping the EKS cluster
    - `aws eks --region us-east-2 update-kubeconfig --name udacity-cluster`
    - Change kubernetes context to the new AWS cluster
-     - `kubectl config use-context <cluster_name>`
+     - `kubectl config use-context arn:aws:eks:us-east-2:017496916452:cluster/udacity-cluster`
        - e.g ` arn:aws:eks:us-east-2:139802095464:cluster/udacity-cluster`
    - Confirm with: `kubectl get pods --all-namespaces`
    - Then run `kubectl create namespace monitoring`
@@ -121,15 +123,19 @@ sudo systemctl restart nginx
 
     `helm repo add prometheus-community https://prometheus-community.github.io/helm-charts`
 
+    `helm repo update`
+
     `helm install prometheus prometheus-community/kube-prometheus-stack -f "values.yaml" --namespace monitoring`
 
 <!-- `helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring` -->
 
-<!-- 10. Port forward
+10. Port forward
 `kubectl -n monitoring  port-forward svc/prometheus-grafana  8888:80`
-`kubectl -n monitoring  port-forward svc/prometheus-kube-prometheus-prometheus 8889:9090` -->
+<!-- `kubectl -n monitoring  port-forward svc/prometheus-kube-prometheus-prometheus 8889:9090` -->
 
-<!-- Point your local web browser to http://localhost:8888 for Grafana access and http://localhost:8889 for Prometheus access -->
+Point your local web browser to http://localhost:8888 for Grafana access and http://localhost:8889 for Prometheus access
+
+OR
 
 Get the DNS of your load balancer provisioned to access Grafana. You can find this by opening your AWS console and going to EC2 -> Load Balancers and selecting the load balancer provisioned. The DNS name of it will be listed below that you can copy and paste into your browser. Type that into your web browser to access Grafana.
 

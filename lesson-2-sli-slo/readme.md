@@ -17,6 +17,7 @@
     - `unzip terraform_1.0.7_linux_amd64.zip`
     - `mkdir ~/bin`
     - `mv terraform ~/bin`
+    <!-- - `export TF_PLUGIN_CACHE_DIR="/tmp"` -->
 
 - kubectl
     - `curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl`
@@ -28,15 +29,15 @@
     - Clone the starter code from the git repo to a folder CloudShell
     - `cd` into the `starter` folder
     - `terraform init`
-    - `terraform apply`
+    - `terraform apply -auto-approve`
 
 **NOTE** The first time you run `terraform apply` you may see errors about the Kubernetes namespace. Running it again **AFTER** performing the step below should clear up those errors.
 
 5. Setup Kubernetes config so you can ping the EKS cluster
+<!-- Go to https://us-east-2.console.aws.amazon.com/eks/home?region=us-east-2 then create a cluster name `udacity-cluster` -->
    - `aws eks --region us-east-2 update-kubeconfig --name udacity-cluster`
-   - Change kubernetes context to the new AWS cluster
-     - `kubectl config use-context <cluster_name>`
-       - e.g ` arn:aws:eks:us-east-2:139802095464:cluster/udacity-cluster`
+   - Change kubernetes context to **the new AWS cluster**
+    - `kubectl config use-context arn:aws:eks:us-east-2:017496916452:cluster/udacity-cluster`
     - `kubectl create namespace monitoring`
    - Confirm with: `kubectl get pods --all-namespaces`
 

@@ -396,9 +396,11 @@ alertmanager:
     ## Image of Alertmanager
     ##
     image:
-      repository: quay.io/prometheus/alertmanager
-      tag: v0.22.2
+      registry: quay.io
+      repository: prometheus/alertmanager
+      tag: ""
       sha: ""
+      pullPolicy: Always
 
     ## If true then the user will be responsible to provide a secret with alertmanager configuration
     ## So when true the config part will be ignored (including templateFiles) and the one in the secret will be used
@@ -1356,7 +1358,7 @@ prometheusOperator:
   ## Admission webhook support for PrometheusRules resources added in Prometheus Operator 0.30 can be enabled to prevent incorrectly formatted
   ## rules from making their way into prometheus and potentially preventing the container from starting
   admissionWebhooks:
-    failurePolicy: Fail
+    failurePolicy: "Ignore"
     enabled: true
     ## A PEM encoded CA bundle which will be used to validate the webhook's server certificate.
     ## If unspecified, system trust roots on the apiserver are used.
@@ -1368,8 +1370,8 @@ prometheusOperator:
     patch:
       enabled: true
       image:
-        repository: jettech/kube-webhook-certgen
-        tag: v1.5.2
+        repository: ingress-nginx/kube-webhook-certgen
+        tag: v20221220-controller-v1.5.1-58-g787ea74b6
         sha: ""
         pullPolicy: IfNotPresent
       resources: {}
@@ -1576,10 +1578,11 @@ prometheusOperator:
   ## Prometheus-operator image
   ##
   image:
-    repository: quay.io/prometheus-operator/prometheus-operator
-    tag: v0.49.0
+    registry: quay.io
+    repository: prometheus-operator/prometheus-operator
+    tag: v0.66.0
     sha: ""
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
 
   ## Prometheus image to use for prometheuses managed by the operator
   ##
@@ -1593,8 +1596,9 @@ prometheusOperator:
   ##
   prometheusConfigReloaderImage:
     repository: quay.io/prometheus-operator/prometheus-config-reloader
-    tag: v0.49.0
+    tag: v0.66.0
     sha: ""
+    pullPolicy: Always
 
   ## Set the prometheus config reloader side-car CPU limit
   ##
@@ -1960,7 +1964,8 @@ prometheus:
     ## Image of Prometheus.
     ##
     image:
-      repository: quay.io/prometheus/prometheus
+      registry: quay.io
+      repository: prometheus/prometheus
       tag: v2.28.1
       sha: ""
 
