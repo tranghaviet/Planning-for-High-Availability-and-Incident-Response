@@ -9,13 +9,13 @@ locals {
    }
  }
 
- module "vpc" {
+ module "vpc" { # module.vpc.aws_vpc.vpc will be created for us-east-2
    source     = "./modules/vpc"
    cidr_block = "10.100.0.0/16"
 
    account_owner = local.name
    name          = "${local.name}-project"
-   azs           = []
+   azs           = ["us-east-2a", "us-east-2b"]
    private_subnet_tags = {
      "kubernetes.io/role/internal-elb" = 1
    }
@@ -30,7 +30,7 @@ locals {
 
    account_owner = local.name
    name          = "${local.name}-project"
-   azs           = []
+   azs           = ["us-west-1a", "us-west-1b", "us-west-1c"]
    private_subnet_tags = {
      "kubernetes.io/role/internal-elb" = 1
    }
@@ -38,6 +38,9 @@ locals {
      "kubernetes.io/role/elb" = 1
    }
 
+    providers = {
+      aws = aws.usw1
+    }
  }
 
 output "vpc_id" {

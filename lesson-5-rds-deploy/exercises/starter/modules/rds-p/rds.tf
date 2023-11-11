@@ -3,7 +3,7 @@ resource "aws_rds_cluster_parameter_group" "cluster_pg" {
   family = "aurora5.6"
 
   parameter {
-    name  = "binlog_format"    
+    name  = "binlog_format"
     value = "MIXED"
     apply_method = "pending-reboot"
   }
@@ -22,15 +22,16 @@ resource "aws_db_subnet_group" "udacity_db_subnet_group" {
 }
 resource "aws_rds_cluster" "udacity_cluster" {
   cluster_identifier       = "udacity-db-cluster"
-  availability_zones       = {}
+  availability_zones       = ["us-east-2a", "us-east-2b", "us-east-2c"]
   db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.cluster_pg.name
   database_name            = "udacityc2"
   master_username          = "udacity"
-  master_password          = "MyUdacityPassword"
+#  master_password          = "MyUdacityPassword"
+  master_password          = var.master_password
   vpc_security_group_ids   = [aws_security_group.db_sg_1.id]
   db_subnet_group_name     = aws_db_subnet_group.udacity_db_subnet_group.name
   engine_mode              = "provisioned"
-  engine_version           = "5.6.mysql_aurora.1.19.1" 
+  engine_version           = "5.6.mysql_aurora.1.19.1"
   skip_final_snapshot      = true
   storage_encrypted        = false
   depends_on = [aws_rds_cluster_parameter_group.cluster_pg]
